@@ -1,31 +1,30 @@
 %{
-  #include <stdio.h>  
-  #include <string.h>  
+  #include <stdio.h>
+  #include <string.h>
   #include <stdlib.h>
-  
+
   int yylex();
   void yyerror(char *message);
   extern int yylineno;
- 
+
 %}
 
-%start PROGRAM 
-%token greaterEqual lessEqual isEqual notEqual  
-%token logicOp_and logicOp_or logicOp_not
-%token floatType charType intType 
-%token loop end_loop if_statement elif_statement default_statement logStatment 
-%token identifier floatVal integerVal charVal
+%start PROGRAM
+%token GE LE IS ISNT
+%token AND OR NOT
+%token REAL ALPHA NUMBER
+%token UNTIL DO END_LOOP IF ELSE_IF DEFUALT
+%token identifier
 
-%nonassoc elif_statement
-%nonassoc default_statement
-%right greaterEqual lessEqual
-%right greater less
-%right isEqual notEqual
+%nonassoc ELSE_IF
+%nonassoc DEFAULT
+%right GE LE
+%right IS ISNT
 %left '+' '-'
 %left '*' '/'
-%right not
-%right and 
-%right or
+%right NOT
+%right AND
+%right OR
 
 
 
@@ -42,15 +41,15 @@ stmt:    ','
     | '.' {printf("-------------\nPROGRAM ENDED NUMBER OF LINES >> %d\n",yylineno);exit(0);}
     | exp ','
     | conditions ','
-    | ifStruct 
-    | loopStruct 
+    | ifStruct
+    | loopStruct
     ;
 
-exp: 
+exp:
     | identifier
     | literal
     | declartion
-    | exp '+' exp 
+    | exp '+' exp
     | exp '-' exp
     | exp '*' exp
     | exp '/' exp
@@ -64,15 +63,15 @@ exp:
     | exp AND exp
     | exp NOT exp
     ;
-    
 
-declartion: NUMBER identifier 
+
+declartion: NUMBER identifier
           | REAL identifier
           | ALPHA identifier
           ;
 
 
-ifStruct: 
+ifStruct:
         IF exp THEN line ','             %prec ELSE_IF
         | IF exp THEN line, DEFAULT THEN line, END_LOOP ','
         ;
@@ -101,7 +100,7 @@ else
 	{
 			printf("\nParsing failed\n");
 	}
-    
+
 }
 
 void yyerror(char *message) {
